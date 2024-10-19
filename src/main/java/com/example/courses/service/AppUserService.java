@@ -27,7 +27,7 @@ public class AppUserService  {
     }
 
     @GetMapping
-    public List<AppUser> getNames() {
+    public List<AppUser> getUsers() {
         return this.userRepository.findAll();
     }
 
@@ -48,7 +48,7 @@ public class AppUserService  {
 // es posible usarlo siempre y cuando la interface UserRepository extienda de JpaRepository
         userRepository.save(user);
         datos.put("data", user);
-        datos.put("message", "Se guardó con éxito");
+        datos.put("message", "Usuario registrado con éxito");
 
         return new ResponseEntity<>(
                 datos,
@@ -130,6 +130,7 @@ public class AppUserService  {
             // Autenticación exitosa
             datos.put("message", "Autenticación exitosa");
             datos.put("data", user.get());
+            datos.put("role", user.get().getRole());
             return new ResponseEntity<>(datos, HttpStatus.OK);
         } else {
             // Autenticación fallida

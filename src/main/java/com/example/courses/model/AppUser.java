@@ -89,7 +89,7 @@ public class AppUser {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 
     public String getLastName() {
@@ -97,7 +97,7 @@ public class AppUser {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = lastName.toUpperCase();
     }
 
     public String getAddress() {
@@ -105,7 +105,7 @@ public class AppUser {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.address = address.toUpperCase();;
     }
 
     public String getAddressNumber() {

@@ -21,8 +21,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<AppUser> getNames(){
-        return appUserService.getNames();
+    public List<AppUser> getUsers(){
+        return appUserService.getUsers();
     }
 
     @PostMapping("/login")
