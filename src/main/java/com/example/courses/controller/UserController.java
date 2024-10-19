@@ -30,7 +30,6 @@ public class UserController {
         String email = credentials.get("email");
         String password = credentials.get("password");
 
-        // Llama a tu servicio de autenticación con email y password
         return this.appUserService.autenticarUsuario(email, password);
     }
 
@@ -48,5 +47,11 @@ public class UserController {
     public ResponseEntity<Object> eliminarUsuario(@PathVariable("userId") Long id){
         return this.appUserService.deleteUser(id);
     }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Object> getUserByEmail(@PathVariable String email) {
+        return this.appUserService.findUserByEmail(email);
+    }
+
 
 }

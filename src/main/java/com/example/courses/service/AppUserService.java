@@ -1,6 +1,7 @@
 package com.example.courses.service;
 
 import com.example.courses.model.AppUser;
+import com.example.courses.model.Role;
 import com.example.courses.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,26 +32,23 @@ public class AppUserService  {
     }
 
     public ResponseEntity<Object> newUser(AppUser user) {
-        Optional<AppUser> res = userRepository.findAppUserByEmail(user.getEmail());
+        Optional<AppUser> existingUser = userRepository.findAppUserByEmail(user.getEmail());
         datos = new HashMap<>();
 
-
-        if (res.isPresent() && user.getId() == null) {
+        // Verifica si el usuario ya existe
+        if (existingUser.isPresent()) {
             datos.put("error", true);
             datos.put("message", "Ya existe el email");
-            return new ResponseEntity<>(
-                    datos,
-                    HttpStatus.CONFLICT
-            );
+            return new ResponseEntity<>(datos, HttpStatus.CONFLICT);
         }
-        datos.put("message", "Se guardó con éxito");
-        if (user.getId() != null) {
-            datos.put("message", "Se actualizó con éxito");
-        }
+
+        user.setRole(Role.STUDENT);
+
 // save()  método predefinido en Spring Data JPA.
 // es posible usarlo siempre y cuando la interface UserRepository extienda de JpaRepository
         userRepository.save(user);
         datos.put("data", user);
+        datos.put("message", "Se guardó con éxito");
 
         return new ResponseEntity<>(
                 datos,
@@ -140,6 +138,21 @@ public class AppUserService  {
             return new ResponseEntity<>(datos, HttpStatus.UNAUTHORIZED);
         }
     }
+
+    public ResponseEntity<Object> findUserByEmail(String email) {
+        Optional<AppUser> user = userRepository.findAppUserByEmail(email);
+        Map<String, Object> datos = new HashMap<>();
+
+        if (user.isPresent()) {
+            datos.put("data", user.get());
+            return new ResponseEntity<>(datos, HttpStatus.OK);
+        } else {
+            datos.put("error", true);
+            datos.put("message", "Usuario no encontrado");
+            return new ResponseEntity<>(datos, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ package com.example.courses.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -32,6 +33,7 @@ public class AppUser {
     @NotNull(message = "El apellido es obligatorio.")
     private String lastName;
     private String address;
+    @Pattern(regexp = "\\d+", message = "El número de dirección debe ser un número válido.")
     private String addressNumber;
 
     @Enumerated(EnumType.STRING)
