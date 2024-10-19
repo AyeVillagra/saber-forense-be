@@ -47,6 +47,8 @@ public class AppUserService  {
         if (user.getId() != null) {
             datos.put("message", "Se actualizó con éxito");
         }
+// save()  método predefinido en Spring Data JPA.
+// es posible usarlo siempre y cuando la interface UserRepository extienda de JpaRepository
         userRepository.save(user);
         datos.put("data", user);
 
