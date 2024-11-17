@@ -1,14 +1,15 @@
 package com.example.courses.controller;
 
 import com.example.courses.model.AppUser;
+import com.example.courses.model.LoginRequest;
 import com.example.courses.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/usuarios")
@@ -26,9 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
+    public ResponseEntity<Object> loginUser(@RequestBody LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
 
         return this.appUserService.autenticarUsuario(email, password);
     }
