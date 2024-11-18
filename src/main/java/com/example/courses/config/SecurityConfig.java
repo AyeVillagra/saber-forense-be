@@ -19,10 +19,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     auth.requestMatchers("/").permitAll();
-                    auth.requestMatchers("/user").hasRole("USER");
+                   /* auth.requestMatchers("/user").hasRole("USER");*/
                     auth.requestMatchers("/admin").hasRole("Admin");
                     auth.requestMatchers("/usuarios/**").permitAll();
                     auth.requestMatchers("/courses/**").permitAll();
+                    auth.requestMatchers("/inscripciones/**").permitAll();
                 })
                 .formLogin(Customizer.withDefaults())
                 .build();

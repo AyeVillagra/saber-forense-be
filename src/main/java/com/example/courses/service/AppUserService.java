@@ -57,25 +57,20 @@ public class AppUserService  {
     }
 
     public ResponseEntity<Object> deleteUser(Long id) {
-        datos = new HashMap<>();
-        boolean existe = this.userRepository.existsById(id);
-        if (!existe) {
+        Map<String, Object> datos = new HashMap<>();
+
+        boolean exists = this.userRepository.existsById(id);
+
+        if (!exists) {
             datos.put("error", true);
             datos.put("message", "No existe el usuario con ese id");
-            return new ResponseEntity<>(
-                    datos,
-                    HttpStatus.CONFLICT
-            );
+            return new ResponseEntity<>(datos, HttpStatus.NOT_FOUND);
         }
-
         userRepository.deleteById(id);
-        datos.put("message", "Usuario eliminado");
-        return new ResponseEntity<>(
-                datos,
-                HttpStatus.ACCEPTED
-        );
-
+        datos.put("message", "Usuario eliminado con éxito");
+        return new ResponseEntity<>(datos, HttpStatus.OK);
     }
+
 
 
     public ResponseEntity<Object> updateUser(Long userId, AppUser user) {

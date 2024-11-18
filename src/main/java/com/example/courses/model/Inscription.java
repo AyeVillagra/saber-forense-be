@@ -1,5 +1,6 @@
 package com.example.courses.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,6 +16,7 @@ public class Inscription {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private AppUser user;
 
     @ManyToOne
@@ -51,11 +53,11 @@ public class Inscription {
     }
 
     public Course getCourse() {
-        return course;  // Getter para Course
+        return course;
     }
 
     public void setCourse(Course course) {
-        this.course = course;  // Setter para Course
+        this.course = course;
     }
 
     public LocalDateTime getInscriptionDate() {
