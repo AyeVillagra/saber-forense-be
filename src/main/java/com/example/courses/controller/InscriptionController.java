@@ -29,6 +29,7 @@ public class InscriptionController {
             Map<String, Object> response = new HashMap<>();
             response.put("id", inscription.getId());
             response.put("courseName", inscription.getCourse().getName());
+            response.put("courseId", inscription.getCourse().getId());
             response.put("inscriptionDate", inscription.getInscriptionDate());
             response.put("active", inscription.isActive());
             return response;
