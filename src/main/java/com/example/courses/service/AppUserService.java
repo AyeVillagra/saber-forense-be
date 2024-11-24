@@ -74,22 +74,19 @@ public class AppUserService  {
 
 
     public ResponseEntity<Object> updateUser(Long userId, AppUser user) {
-        // Lógica para actualizar el usuario en la base de datos
 
-        // Verifica si el usuario ya existe por correo electrónico antes de actualizar
-        Optional<AppUser> existingUser = appUserRepository.findAppUserByEmail(user.getEmail());
+        Optional<AppUser> existingUser = appUserRepository.findById(userId);
         if (!existingUser.isPresent()) {
-            // Usuario no encontrado, devuelve una respuesta de error
             datos.put("error", true);
             datos.put("message", "El usuario no existe");
             return new ResponseEntity<>(datos, HttpStatus.NOT_FOUND);
         }
-        // Actualiza la contraseña si se proporciona
+
         if (user.getPassword() != null) {
             existingUser.get().setPassword(user.getPassword());
         }
 
-        // Actualiza los detalles adicionales si se proporcionan
+
         if (user.getName() != null) {
             existingUser.get().setName(user.getName());
         }
@@ -106,10 +103,8 @@ public class AppUserService  {
             existingUser.get().setAddressNumber(user.getAddressNumber());
         }
 
-        // Guarda la actualización en la base de datos
         appUserRepository.save(existingUser.get());
 
-        // Devuelve una respuesta de éxito
         datos.put("message", "Usuario actualizado con éxito");
         datos.put("data", existingUser.get());
         return new ResponseEntity<>(datos, HttpStatus.OK);
