@@ -11,4 +11,5 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
 
     Optional<AppUser> findAppUserByEmail(String email);
+    Optional<AppUser> findByName(String username);
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -25,6 +26,8 @@ public class AppUserService  {
     public AppUserService(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
     }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<AppUser> getUsers() {
@@ -33,7 +36,7 @@ public class AppUserService  {
 
     public ResponseEntity<Object> newUser(AppUser user) {
         Optional<AppUser> existingUser = appUserRepository.findAppUserByEmail(user.getEmail());
-        datos = new HashMap<>();
+        Map<String, Object> datos = new HashMap<>();
 
         // Verifica si el usuario ya existe
         if (existingUser.isPresent()) {
@@ -41,6 +44,7 @@ public class AppUserService  {
             datos.put("message", "Ya existe el email");
             return new ResponseEntity<>(datos, HttpStatus.CONFLICT);
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         user.setRole(Role.STUDENT);
 
@@ -116,17 +120,23 @@ public class AppUserService  {
 
         Optional<AppUser> user = appUserRepository.findAppUserByEmail(email);
 
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            // Autenticación exitosa
-            datos.put("message", "Autenticación exitosa");
-            datos.put("data", user.get());
-            datos.put("role", user.get().getRole());
-            return new ResponseEntity<>(datos, HttpStatus.OK);
+        // Verificar si el usuario existe
+        if (user.isPresent()) {
+            if (passwordEncoder.matches(password, user.get().getPassword())) {
+                // Autenticación exitosa
+                datos.put("message", "Autenticación exitosa");
+                datos.put("data", user.get());
+                datos.put("role", user.get().getRole());
+                return new ResponseEntity<>(datos, HttpStatus.OK);
+            } else {
+                datos.put("error", true);
+                datos.put("message", "Credenciales incorrectas");
+                return new ResponseEntity<>(datos, HttpStatus.UNAUTHORIZED);
+            }
         } else {
-            // Autenticación fallida
             datos.put("error", true);
-            datos.put("message", "Credenciales incorrectas");
-            return new ResponseEntity<>(datos, HttpStatus.UNAUTHORIZED);
+            datos.put("message", "Usuario no encontrado");
+            return new ResponseEntity<>(datos, HttpStatus.NOT_FOUND);
         }
     }
 
