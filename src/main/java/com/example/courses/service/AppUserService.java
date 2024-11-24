@@ -2,7 +2,7 @@ package com.example.courses.service;
 
 import com.example.courses.model.AppUser;
 import com.example.courses.model.Role;
-import com.example.courses.repository.UserRepository;
+import com.example.courses.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +19,20 @@ import java.util.Optional;
 @Service
 public class AppUserService  {
     HashMap<String, Object> datos;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
     @Autowired
-    public AppUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AppUserService(AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
     }
 
     @GetMapping
     public List<AppUser> getUsers() {
-        return this.userRepository.findAll();
+        return this.appUserRepository.findAll();
     }
 
     public ResponseEntity<Object> newUser(AppUser user) {
-        Optional<AppUser> existingUser = userRepository.findAppUserByEmail(user.getEmail());
+        Optional<AppUser> existingUser = appUserRepository.findAppUserByEmail(user.getEmail());
         datos = new HashMap<>();
 
         // Verifica si el usuario ya existe
@@ -46,7 +46,7 @@ public class AppUserService  {
 
 // save()  método predefinido en Spring Data JPA.
 // es posible usarlo siempre y cuando la interface UserRepository extienda de JpaRepository
-        userRepository.save(user);
+        appUserRepository.save(user);
         datos.put("data", user);
         datos.put("message", "Usuario registrado con éxito");
 
@@ -59,14 +59,14 @@ public class AppUserService  {
     public ResponseEntity<Object> deleteUser(Long id) {
         Map<String, Object> datos = new HashMap<>();
 
-        boolean exists = this.userRepository.existsById(id);
+        boolean exists = this.appUserRepository.existsById(id);
 
         if (!exists) {
             datos.put("error", true);
             datos.put("message", "No existe el usuario con ese id");
             return new ResponseEntity<>(datos, HttpStatus.NOT_FOUND);
         }
-        userRepository.deleteById(id);
+        appUserRepository.deleteById(id);
         datos.put("message", "Usuario eliminado con éxito");
         return new ResponseEntity<>(datos, HttpStatus.OK);
     }
@@ -77,7 +77,7 @@ public class AppUserService  {
         // Lógica para actualizar el usuario en la base de datos
 
         // Verifica si el usuario ya existe por correo electrónico antes de actualizar
-        Optional<AppUser> existingUser = userRepository.findAppUserByEmail(user.getEmail());
+        Optional<AppUser> existingUser = appUserRepository.findAppUserByEmail(user.getEmail());
         if (!existingUser.isPresent()) {
             // Usuario no encontrado, devuelve una respuesta de error
             datos.put("error", true);
@@ -107,7 +107,7 @@ public class AppUserService  {
         }
 
         // Guarda la actualización en la base de datos
-        userRepository.save(existingUser.get());
+        appUserRepository.save(existingUser.get());
 
         // Devuelve una respuesta de éxito
         datos.put("message", "Usuario actualizado con éxito");
@@ -119,7 +119,7 @@ public class AppUserService  {
     public ResponseEntity<Object> autenticarUsuario(String email, String password) {
         Map<String, Object> datos = new HashMap<>();
 
-        Optional<AppUser> user = userRepository.findAppUserByEmail(email);
+        Optional<AppUser> user = appUserRepository.findAppUserByEmail(email);
 
         if (user.isPresent() && user.get().getPassword().equals(password)) {
             // Autenticación exitosa
@@ -136,7 +136,7 @@ public class AppUserService  {
     }
 
     public ResponseEntity<Object> findUserByEmail(String email) {
-        Optional<AppUser> user = userRepository.findAppUserByEmail(email);
+        Optional<AppUser> user = appUserRepository.findAppUserByEmail(email);
         Map<String, Object> datos = new HashMap<>();
 
         if (user.isPresent()) {

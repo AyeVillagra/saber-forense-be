@@ -15,5 +15,13 @@ public class InscriptionService {
     public List<Inscription> getInscriptionsByUserId(Long userId) {
         return inscriptionRepository.findByUserId(userId);
     }
+
+    public Inscription createInscription(Inscription inscription) {
+        return inscriptionRepository.save(inscription);
+    }
+
+    public void deleteInscription(Long id) {
+        inscriptionRepository.deleteById(id);
+    }
 }
 
