@@ -45,10 +45,15 @@ public class InscriptionController {
 
     // Eliminar una inscripción (dar de baja)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInscription(@PathVariable Long id) {
-        inscriptionService.deleteInscription(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deactivateInscription(@PathVariable Long id) {
+        try {
+            inscriptionService.deactivateInscription(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
 
 
 
