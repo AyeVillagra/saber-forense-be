@@ -45,8 +45,10 @@ public class AppUserService  {
             return new ResponseEntity<>(datos, HttpStatus.CONFLICT);
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null) {
+            user.setRole(Role.STUDENT);
+        }
 
-        user.setRole(Role.STUDENT);
 
 // save()  método predefinido en Spring Data JPA.
 // es posible usarlo siempre y cuando la interface UserRepository extienda de JpaRepository
