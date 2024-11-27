@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -75,6 +74,9 @@ public class Course {
 
     // Método para convertir la lista de URLs a formato JSON
     private String convertToJson(List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            return "[]"; // Si la lista está vacía o nula, devolvemos una lista vacía en formato JSON
+        }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(imageUrls); // Convierte la lista a JSON
@@ -84,8 +86,12 @@ public class Course {
         }
     }
 
+
     // Método para convertir el JSON de nuevo a una lista de URLs
     public List<String> getImageUrls() {
+        if (imageUrlsJson == null || imageUrlsJson.isEmpty()) {
+            return List.of(); // Si el JSON es nulo o vacío, devolvemos una lista vacía
+        }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(imageUrlsJson, objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));

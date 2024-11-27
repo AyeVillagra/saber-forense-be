@@ -16,18 +16,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private AppUserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Buscar al usuario en la base de datos por su nombre de usuario
-        AppUser appUser = userRepository.findByName(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser appUser = userRepository.findAppUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         String role = appUser.getRole().name();
-
-        // Devolver el usuario con la contraseña encriptada y roles
         return User.builder()
                 .username(appUser.getName())
-                .password(appUser.getPassword()) // Contraseña encriptada
-                .roles(role) // Asumimos que tienes roles
+                .password(appUser.getPassword())
+                .roles(role)
                 .build();
     }
 }

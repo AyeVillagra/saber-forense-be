@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,8 +31,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/usuarios/**").permitAll();
                     auth.requestMatchers("/courses/**").permitAll();
                     auth.requestMatchers("/inscripciones/**").permitAll();
+                    auth.requestMatchers("/verify-session/").permitAll();
                 })
-                .formLogin(Customizer.withDefaults())
                 .build();
     }
     @Bean
@@ -41,12 +40,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Configuración del AuthenticationManager para que use nuestro CustomUserDetailsService
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(customUserDetailsService) // Configuramos el UserDetailsService
-                .passwordEncoder(passwordEncoder()) // Configuramos el PasswordEncoder
+                .userDetailsService(customUserDetailsService) // Configura el CustomUserDetailsService
+                .passwordEncoder(passwordEncoder()) // Configura el PasswordEncoder
                 .and()
                 .build();
     }
