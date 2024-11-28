@@ -5,6 +5,9 @@ import com.example.courses.service.InscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -36,7 +39,7 @@ public class InscriptionController {
         }).collect(Collectors.toList());
     }
 
-    // Inscribir a un usuario en un curso (solo para STUDENT o SYSADMIN)
+    // Inscribir a un usuario en un curso (solo para STUDENT)
     @PostMapping
     public ResponseEntity<Inscription> createInscription(@RequestBody Inscription inscription) {
         Inscription newInscription = inscriptionService.createInscription(inscription);
