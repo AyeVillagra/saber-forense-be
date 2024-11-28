@@ -9,14 +9,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.util.Collection;
 import java.util.List;
 import java.time.LocalDateTime;
 
 @Entity
 @Table
-public class AppUser {
+public class AppUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -137,6 +141,37 @@ public class AppUser {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    // Métodos de la interfaz UserDetails
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // Ajustar según lógica de negocio si es necesario
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // Ajustar según lógica de negocio si es necesario
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // Ajustar según lógica de negocio si es necesario
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // Ajustar según lógica de negocio si es necesario
     }
 
 }

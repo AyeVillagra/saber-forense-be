@@ -28,10 +28,11 @@ public class SecurityConfig {
                     auth.requestMatchers("/").permitAll();
                     /* auth.requestMatchers("/user").hasRole("USER");*/
                     auth.requestMatchers("/admin").hasRole("Admin");
+                    auth.requestMatchers("/sysadmin").hasRole("Sysadmin");
                     auth.requestMatchers("/usuarios/**").permitAll();
                     auth.requestMatchers("/courses/**").permitAll();
                     auth.requestMatchers("/inscripciones/**").permitAll();
-                    auth.requestMatchers("/verify-session/").permitAll();
+                    auth.requestMatchers("/verify-session").permitAll();
                 })
                 .build();
     }

@@ -51,10 +51,17 @@ public class AppUserController {
             // Validar las credenciales usando el AuthenticationManager
             Authentication authentication = authManager.authenticate(authenticationToken);
 
-            // Si la autenticación es exitosa, devolver una respuesta en formato JSON
-            Map<String, String> response = new HashMap<>();
+            // Si la autenticación es exitosa, obtener el usuario autenticado
+            AppUser authenticatedUser = (AppUser) authentication.getPrincipal();
+
+            // Crear la respuesta con los datos del usuario autenticado
+            Map<String, Object> response = new HashMap<>();
             response.put("message", "Usuario autenticado correctamente");
+            response.put("data", authenticatedUser); // Agregar los datos del usuario
+            response.put("role", authenticatedUser.getRole()); // Agregar el rol del usuario
+
             return ResponseEntity.ok(response);
+
         } catch (BadCredentialsException e) {
             // Si las credenciales no son válidas, devolver un error en formato JSON
             Map<String, String> errorResponse = new HashMap<>();
